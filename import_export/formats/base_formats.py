@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.utils.six import moves
+from django.conf import settings
 
 import sys
 import warnings
@@ -39,6 +40,9 @@ try:
     from importlib import import_module
 except ImportError:
     from django.utils.importlib import import_module
+
+
+IMPORT_EXPORT_CSV_DELIMITER = str(getattr(settings, 'IMPORT_EXPORT_CSV_DELIMITER', ';'))
 
 
 class Format(object):
@@ -102,11 +106,11 @@ class TablibFormat(Format):
 
     def create_dataset(self, in_stream, **kwargs):
         data = tablib.Dataset()
-        self.get_format().import_set(data, in_stream, **kwargs)
+        self.get_format().import_set(data, in_stream, delimiter=IMPORT_EXPORT_CSV_DELIMITER, **kwargs)
         return data
 
     def export_data(self, dataset, **kwargs):
-        return self.get_format().export_set(dataset, **kwargs)
+        return self.get_format().export_set(dataset, delimiter=IMPORT_EXPORT_CSV_DELIMITER, **kwargs)
 
     def get_extension(self):
         # we support both 'extentions' and 'extensions' because currently
