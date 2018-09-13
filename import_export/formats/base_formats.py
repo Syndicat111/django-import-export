@@ -106,11 +106,11 @@ class TablibFormat(Format):
 
     def create_dataset(self, in_stream, **kwargs):
         data = tablib.Dataset()
-        self.get_format().import_set(data, in_stream, delimiter=IMPORT_EXPORT_CSV_DELIMITER, **kwargs)
+        self.get_format().import_set(data, in_stream, **kwargs)
         return data
 
     def export_data(self, dataset, **kwargs):
-        return self.get_format().export_set(dataset, delimiter=IMPORT_EXPORT_CSV_DELIMITER, **kwargs)
+        return self.get_format().export_set(dataset, **kwargs)
 
     def get_extension(self):
         # we support both 'extentions' and 'extensions' because currently
@@ -151,6 +151,14 @@ class CSV(TextFormat):
             # python 2.7 csv does not do unicode
             return super(CSV, self).create_dataset(in_stream.encode('utf-8'), **kwargs)
         return super(CSV, self).create_dataset(in_stream, **kwargs)
+
+    def create_dataset(self, in_stream, **kwargs):
+        data = tablib.Dataset()
+        self.get_format().import_set(data, in_stream, delimiter=IMPORT_EXPORT_CSV_DELIMITER, **kwargs)
+        return data
+
+    def export_data(self, dataset, **kwargs):
+        return self.get_format().export_set(dataset, delimiter=IMPORT_EXPORT_CSV_DELIMITER, **kwargs)
 
 
 class JSON(TextFormat):
